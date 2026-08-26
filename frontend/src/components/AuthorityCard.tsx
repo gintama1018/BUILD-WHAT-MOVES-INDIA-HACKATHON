@@ -19,9 +19,9 @@ export function AuthorityCard({ candidate, index, onSelect, onConfirmDirect, hig
       aria-labelledby={`auth-title-${candidate.authority_id}`}
     >
       {/* Header section with badges */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap', marginBottom: '16px' }}>
+      <div className="authority-card__header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '8px' }}>
+          <div className="authority-card__badges">
             {isRecommended && (
               <span style={{
                 backgroundColor: 'var(--md-sys-color-primary)',
@@ -40,43 +40,43 @@ export function AuthorityCard({ candidate, index, onSelect, onConfirmDirect, hig
             <ConfidenceBadge level={candidate.confidence?.level || 'MEDIUM'} />
           </div>
 
-          <h3 id={`auth-title-${candidate.authority_id}`} style={{ fontSize: '1.25rem', marginBottom: '4px' }}>
+          <h3 id={`auth-title-${candidate.authority_id}`} className="authority-card__title">
             {candidate.name}
           </h3>
           {candidate.short_name && (
-            <p style={{ fontSize: '0.88rem', color: 'var(--md-sys-color-on-surface-variant)', margin: 0 }}>
+            <p className="authority-card__subtitle">
               {candidate.short_name}
             </p>
           )}
         </div>
 
-        <div style={{ textAlign: 'right' }}>
+        <div>
           <span className="fee-tag">
             ₹{candidate.fee_amount} application fee
           </span>
         </div>
       </div>
 
-      {/* Core metadata facts */}
-      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '16px', padding: '10px 14px', backgroundColor: 'var(--md-sys-color-surface-container-low)', borderRadius: 'var(--radius-md)' }}>
-        <span style={{ fontSize: '0.88rem', color: 'var(--md-sys-color-on-surface)' }}>
-          <strong>Location Scope:</strong> {candidate.state_id ? `${candidate.state_id} (State)` : 'National (All India)'}
+      {/* Core metadata facts strip */}
+      <div className="authority-card__meta">
+        <span>
+          <strong>Scope:</strong> {candidate.state_id ? `${candidate.state_id} (State)` : 'National (All India)'}
         </span>
-        <span style={{ fontSize: '0.88rem', color: 'var(--md-sys-color-on-surface)' }}>
+        <span>
           <strong>Filing Route:</strong> {candidate.filing_method === 'BOTH' ? 'Online + Offline (Postal)' : candidate.filing_method}
         </span>
-        <span style={{ fontSize: '0.88rem', color: 'var(--md-sys-color-on-surface)' }}>
-          <strong>Verification:</strong> {candidate.last_verified_date}
+        <span>
+          <strong>Verified:</strong> {candidate.last_verified_date}
         </span>
       </div>
 
       {/* Match reasons */}
       {candidate.match_reasons?.length > 0 && (
-        <div style={{ marginBottom: '16px' }}>
-          <p style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--md-sys-color-on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.03em', marginBottom: '6px' }}>
+        <div className="authority-card__reasons">
+          <p className="authority-card__reasons-label">
             Why it matches your query:
           </p>
-          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+          <div className="authority-card__reasons-list">
             {candidate.match_reasons.map((r: string, i: number) => (
               <StatusChip key={i} label={r} />
             ))}
@@ -86,40 +86,25 @@ export function AuthorityCard({ candidate, index, onSelect, onConfirmDirect, hig
 
       {/* Caveat alert if any */}
       {candidate.confidence?.caveats?.length > 0 && (
-        <div style={{
-          backgroundColor: '#feefe3',
-          border: '1px solid #fcdfc8',
-          borderRadius: 'var(--radius-md)',
-          padding: '10px 14px',
-          marginBottom: '16px',
-          fontSize: '0.85rem',
-          color: '#7a3500'
-        }}>
+        <div className="authority-card__caveat">
           <strong>Note:</strong> {candidate.confidence.caveats[0]}
         </div>
       )}
 
       {/* Expandable Details */}
       {expanded && (
-        <div style={{
-          backgroundColor: 'var(--md-sys-color-surface-container-low)',
-          border: '1px solid var(--border-subtle)',
-          borderRadius: 'var(--radius-md)',
-          padding: '14px',
-          marginBottom: '16px',
-          fontSize: '0.9rem'
-        }}>
+        <div className="authority-card__details">
           {candidate.pio_designation && (
-            <div style={{ marginBottom: '8px' }}>
+            <div className="stack-sm">
               <strong>Designated Officer:</strong> {candidate.pio_designation}
             </div>
           )}
           {candidate.pio_contact_note && (
-            <div style={{ marginBottom: '8px', color: 'var(--md-sys-color-on-surface-variant)' }}>
+            <div className="stack-sm" style={{ color: 'var(--md-sys-color-on-surface-variant)' }}>
               {candidate.pio_contact_note}
             </div>
           )}
-          <div style={{ marginBottom: '8px' }}>
+          <div className="stack-sm">
             <strong>Official Filing Portal:</strong>{' '}
             <a href={candidate.portal_url} target="_blank" rel="noopener noreferrer">
               {candidate.portal_url} ↗
@@ -134,8 +119,8 @@ export function AuthorityCard({ candidate, index, onSelect, onConfirmDirect, hig
         </div>
       )}
 
-      {/* Action Buttons */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', paddingTop: '8px' }}>
+      {/* Action Buttons: 2 buttons on first view (UI_PLAN §5.1) */}
+      <div className="authority-card__actions">
         <button
           className="btn btn-primary"
           onClick={() => onSelect(candidate, index)}
@@ -144,7 +129,7 @@ export function AuthorityCard({ candidate, index, onSelect, onConfirmDirect, hig
           Why this authority? →
         </button>
 
-        {onConfirmDirect && (
+        {isRecommended && onConfirmDirect && (
           <button
             className="btn btn-tertiary"
             onClick={() => onConfirmDirect(candidate)}
@@ -154,11 +139,11 @@ export function AuthorityCard({ candidate, index, onSelect, onConfirmDirect, hig
         )}
 
         <button
-          className="btn btn-secondary btn-sm"
+          className="btn btn-ghost btn-sm"
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
         >
-          {expanded ? 'Fewer details' : 'More authority details'}
+          {expanded ? 'Fewer details' : 'More authority details ▾'}
         </button>
       </div>
     </article>

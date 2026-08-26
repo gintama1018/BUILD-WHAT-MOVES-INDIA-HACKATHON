@@ -45,6 +45,18 @@ function Stepper({ currentStep }: { currentStep: string }) {
   );
 }
 
+// ── Available Subject Domains for Clarify / Quick Pick ────────
+const QUICK_DOMAINS = [
+  { id: 'roads', label: '🚧 Roads & Civic Works' },
+  { id: 'water', label: '💧 Water Supply' },
+  { id: 'electricity', label: '⚡ Electricity (MSEDCL)' },
+  { id: 'passport', label: '📘 Passport & Consular' },
+  { id: 'education', label: '🏫 Schools & Education' },
+  { id: 'police', label: '👮 Police & Complaints' },
+  { id: 'pension', label: '🏦 Central Govt Pension' },
+  { id: 'property', label: '🏠 Property Tax' },
+];
+
 // ── Main App Component ────────────────────────────────────────
 export default function App() {
   const flow = useRtiFlow();
@@ -79,6 +91,12 @@ export default function App() {
     flow.submitQuery(text, loc);
   };
 
+  const handleClarifyDomain = (domainId: string) => {
+    const enrichedQuery = `${queryText} (${domainId})`;
+    setQueryText(enrichedQuery);
+    flow.submitQuery(enrichedQuery, locationText);
+  };
+
   const isHomeSearch = flow.state.step === 'search' && activeInfoView === 'none';
 
   return (
@@ -104,198 +122,125 @@ export default function App() {
         {activeInfoView === 'faq' && (
           <section className="section-padding">
             <div className="container-narrow">
-              <button className="btn btn-ghost btn-sm" onClick={() => setActiveInfoView('none')} style={{ marginBottom: '24px' }}>
+              <button className="btn btn-ghost btn-sm stack-md" onClick={() => setActiveInfoView('none')}>
                 ← Back to Assistant
               </button>
-              <div className="section-header" style={{ textAlign: 'left', marginBottom: '32px' }}>
+              <div className="section-header" style={{ textAlign: 'left', marginBottom: '24px' }}>
                 <div className="section-eyebrow">Civic Support</div>
                 <h2>Frequently Asked Questions</h2>
-                <p>Understand how RTI jurisdiction, application fees, and authority transfers operate in India.</p>
+                <p>Understand how RTI jurisdiction, application fees, and authority routing operate in India.</p>
               </div>
               <FAQAccordion />
             </div>
           </section>
         )}
 
-        {/* ── Main Landing & Search Flow ── */}
+        {/* ── Main Landing & Search Flow (Clean & Focused per UI_PLAN §4.1) ── */}
         {activeInfoView === 'none' && isHomeSearch && (
-          <>
-            {/* Hero Section */}
-            <section className="hero-section">
-              <div className="container-narrow">
-                <div className="hero-eyebrow">
-                  🏛 India RTI Jurisdiction Assistant
-                </div>
-                <h1 className="hero-title">
-                  File RTI to the Right Authority.
-                </h1>
-                <p className="hero-lead">
-                  Tell us what information you need. We help you identify whether your issue belongs to Central, State, or Local government—and provide the exact filing route.
-                </p>
+          <section className="hero-section">
+            <div className="container-narrow">
+              <div className="hero-eyebrow">
+                🏛 India RTI Jurisdiction Assistant
+              </div>
+              <h1 className="hero-title">
+                File RTI to the Right Authority.
+              </h1>
+              <p className="hero-lead">
+                Tell us what information you need. We help you find whether your issue belongs to Central, State, or Local government—and guide you to the official filing route.
+              </p>
 
-                {/* Main Query Card */}
-                <div className="search-card">
-                  <label htmlFor="main-query-input" className="field-label">
-                    What information do you seek?
-                  </label>
-                  <textarea
-                    id="main-query-input"
-                    ref={searchInputRef}
-                    className="query-textarea"
-                    placeholder="Describe your issue in simple words (e.g., Why hasn't my street in Pune been repaired? / Electricity bill discrepancy from MSEDCL / Passport renewal delayed)."
-                    value={queryText}
-                    onChange={(e) => setQueryText(e.target.value)}
-                    rows={3}
-                    maxLength={3000}
-                    aria-describedby="char-count"
+              {/* Main Query Card */}
+              <div className="search-card">
+                <label htmlFor="main-query-input" className="field-label">
+                  What information do you seek?
+                </label>
+                <textarea
+                  id="main-query-input"
+                  ref={searchInputRef}
+                  className="query-textarea"
+                  placeholder="Describe your issue in simple words (e.g., Why hasn't my street in Pune been repaired? / Electricity bill discrepancy from MSEDCL / Passport renewal delayed)."
+                  value={queryText}
+                  onChange={(e) => setQueryText(e.target.value)}
+                  rows={3}
+                  maxLength={3000}
+                  aria-describedby="char-count"
+                />
+
+                <div className="input-divider" />
+
+                <div className="search-controls">
+                  <input
+                    id="location-input-field"
+                    type="text"
+                    className="location-input-field"
+                    placeholder="📍 City or State (e.g. Pune, Maharashtra)"
+                    value={locationText}
+                    onChange={(e) => setLocationText(e.target.value)}
+                    aria-label="Your city or state"
                   />
 
-                  <div className="input-divider" />
-
-                  <div className="search-controls">
-                    <input
-                      id="location-input-field"
-                      type="text"
-                      className="location-input-field"
-                      placeholder="📍 Location (e.g. Pune, Maharashtra)"
-                      value={locationText}
-                      onChange={(e) => setLocationText(e.target.value)}
-                      aria-label="Your city or state"
-                    />
-
-                    <button
-                      className="btn btn-primary"
-                      onClick={handleStartSearch}
-                      disabled={queryText.trim().length < 5}
-                      id="find-authority-submit-btn"
-                    >
-                      Find Authority →
-                    </button>
-                  </div>
-
-                  <div id="char-count" className="char-counter">
-                    {queryText.length}/3000 characters
-                  </div>
-
-                  {/* Suggestion Chips */}
-                  <div className="suggestions-block">
-                    <span className="suggestion-label">Try an example:</span>
-                    <button
-                      type="button"
-                      className="example-chip"
-                      onClick={() => applyExampleChip("Why hasn't my street in Pune been repaired for 6 months?", "Pune, Maharashtra")}
-                    >
-                      🚧 Pune road repair
-                    </button>
-                    <button
-                      type="button"
-                      className="example-chip"
-                      onClick={() => applyExampleChip("My electricity bill from MSEDCL is incorrect", "Maharashtra")}
-                    >
-                      ⚡ MSEDCL electricity bill
-                    </button>
-                    <button
-                      type="button"
-                      className="example-chip"
-                      onClick={() => applyExampleChip("My passport renewal application is delayed for 4 months", "")}
-                    >
-                      📘 Passport renewal delay
-                    </button>
-                    <button
-                      type="button"
-                      className="example-chip"
-                      onClick={() => applyExampleChip("I want information about school funding in my area", "Maharashtra")}
-                    >
-                      🏫 School funding
-                    </button>
-                  </div>
+                  <button
+                    className="btn btn-primary"
+                    onClick={handleStartSearch}
+                    disabled={queryText.trim().length < 5}
+                    id="find-authority-submit-btn"
+                  >
+                    Find Authority →
+                  </button>
                 </div>
 
-                {/* Trust Signals */}
-                <div className="trust-signals-row">
-                  <div className="trust-item">
-                    <span className="icon">✓</span> 100% Free Civic Tool
-                  </div>
-                  <div className="trust-item">
-                    <span className="icon">🔒</span> No Login Required
-                  </div>
-                  <div className="trust-item">
-                    <span className="icon">⚖</span> Sourced from Official Portals
-                  </div>
-                  <div className="trust-item">
-                    <span className="icon">🛡</span> Zero Hallucinated Authorities
-                  </div>
+                <div id="char-count" className="char-counter">
+                  {queryText.length}/3000 characters
                 </div>
 
-                {/* Pain vs Gain Metrics */}
-                <div className="trust-metrics-grid">
-                  <div className="metric-card pain">
-                    <div className="metric-number">~40%</div>
-                    <div className="metric-label">
-                      Of citizen RTI applications face rejection or delays due to filing on the wrong government portal.
-                    </div>
-                  </div>
-                  <div className="metric-card gain">
-                    <div className="metric-number">30 sec</div>
-                    <div className="metric-label">
-                      To identify your exact public authority, verified application fee, and official portal URL.
-                    </div>
-                  </div>
+                {/* Suggestion Chips */}
+                <div className="suggestions-block">
+                  <span className="suggestion-label">Try an example:</span>
+                  <button
+                    type="button"
+                    className="example-chip"
+                    onClick={() => applyExampleChip("Why hasn't my street in Pune been repaired for 6 months?", "Pune, Maharashtra")}
+                  >
+                    🚧 Pune road repair
+                  </button>
+                  <button
+                    type="button"
+                    className="example-chip"
+                    onClick={() => applyExampleChip("My electricity bill from MSEDCL is incorrect", "Maharashtra")}
+                  >
+                    ⚡ MSEDCL electricity bill
+                  </button>
+                  <button
+                    type="button"
+                    className="example-chip"
+                    onClick={() => applyExampleChip("My passport renewal application is delayed for 4 months", "")}
+                  >
+                    📘 Passport renewal delay
+                  </button>
+                  <button
+                    type="button"
+                    className="example-chip"
+                    onClick={() => applyExampleChip("I want information about school funding in my area", "Maharashtra")}
+                  >
+                    🏫 School funding
+                  </button>
                 </div>
               </div>
-            </section>
 
-            {/* How Nyaya Works Section */}
-            <section className="section-padding" style={{ backgroundColor: 'var(--md-sys-color-surface-container-low)', borderTop: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)' }}>
-              <div className="container">
-                <div className="section-header">
-                  <div className="section-eyebrow">Reliable Authority Discovery</div>
-                  <h2>Why Jurisdiction Matters Before You File</h2>
-                  <p>
-                    India’s RTI system is decentralized across Central ministries, State departments, and Local civic corporations. Filing at the wrong level wastes time because cross-jurisdiction transfers are optional.
-                  </p>
+              {/* 3-Item Compact Trust Strip (UI_PLAN §4.1) */}
+              <div className="trust-strip-compact">
+                <div className="trust-strip-item">
+                  <span className="icon">✓</span> 100% Free & Open
                 </div>
-
-                <div className="feature-grid-3">
-                  <div className="feature-item">
-                    <div className="feature-icon-wrapper">1</div>
-                    <h3>Describe in Plain Words</h3>
-                    <p>
-                      No need to memorize bureaucratic department names or government circulars. Simply state what information you need in plain English or Hindi.
-                    </p>
-                  </div>
-
-                  <div className="feature-item">
-                    <div className="feature-icon-wrapper">2</div>
-                    <h3>Deterministic Rule Engine</h3>
-                    <p>
-                      Our system verifies geographic scope and constitutional list rules (Union, State, Concurrent) in code. An authority is only recommended if it exists in our curated database.
-                    </p>
-                  </div>
-
-                  <div className="feature-item">
-                    <div className="feature-icon-wrapper">3</div>
-                    <h3>Direct Official Hand-Off</h3>
-                    <p>
-                      We guide you directly to the verified government portal (e.g. rtionline.gov.in or rtionline.maharashtra.gov.in), show the exact fee (₹10), and give officer routing.
-                    </p>
-                  </div>
+                <div className="trust-strip-item">
+                  <span className="icon">🔒</span> No Login Required
+                </div>
+                <div className="trust-strip-item">
+                  <span className="icon">⚖</span> Sourced from Official Portals
                 </div>
               </div>
-            </section>
-
-            {/* FAQ Preview Section */}
-            <section className="section-padding">
-              <div className="container-narrow">
-                <div className="section-header">
-                  <div className="section-eyebrow">Common Inquiries</div>
-                  <h2>Frequently Asked Questions</h2>
-                  <p>Clear answers to common questions about RTI filing in India.</p>
-                </div>
-                <FAQAccordion />
-              </div>
-            </section>
-          </>
+            </div>
+          </section>
         )}
 
         {/* ── Step: Loading / Processing ── */}
@@ -309,24 +254,24 @@ export default function App() {
                   Analyzing Your Information Request…
                 </h3>
                 <p style={{ fontSize: '0.92rem' }}>
-                  Extracting key topics, checking constitutional jurisdiction lists, and verifying matching public authorities.
+                  Checking jurisdiction rules, verified government portals, and public authority scopes.
                 </p>
               </div>
             </div>
           </section>
         )}
 
-        {/* ── Step: Understanding / Confirmation ── */}
+        {/* ── Step: Understanding / Review ── */}
         {activeInfoView === 'none' && flow.state.step === 'understanding' && (
           <section className="section-padding">
             <div className="container-focused">
               <Stepper currentStep="understanding" />
 
               <div className="card">
-                <div style={{ marginBottom: '16px' }}>
-                  <div className="hero-eyebrow" style={{ marginBottom: '8px' }}>Step 2 · Confirmation</div>
+                <div className="stack-md">
+                  <div className="hero-eyebrow" style={{ marginBottom: '6px' }}>Step 2 · Review</div>
                   <h2>Here's What We Understood</h2>
-                  <p>Please review our understanding of your request before viewing matching authorities.</p>
+                  <p>Please check our understanding before viewing matching authorities.</p>
                 </div>
 
                 <div className="summary-table">
@@ -340,7 +285,14 @@ export default function App() {
                   <div className="summary-row">
                     <span className="summary-key">Identified Topic</span>
                     <span className="summary-val">
-                      <strong>{flow.state.analysis?.intent?.subject_domain || 'General Inquiry'}</strong>
+                      {/* Honesty fix per UI_PLAN §4.3: plain message if domain is null */}
+                      {flow.state.analysis?.intent?.subject_domain ? (
+                        <strong>{flow.state.analysis.intent.subject_domain}</strong>
+                      ) : (
+                        <span style={{ color: 'var(--md-sys-color-on-surface-variant)' }}>
+                          Topic — Not identified yet
+                        </span>
+                      )}
                     </span>
                   </div>
 
@@ -360,15 +312,6 @@ export default function App() {
                     </div>
                   )}
                 </div>
-
-                {flow.state.analysis?.keyword_fallback_used && (
-                  <div className="alert-banner info">
-                    <span className="alert-icon">ℹ</span>
-                    <div>
-                      <strong>Grounded Matching:</strong> Query matched using our deterministic keyword & subject-domain catalog.
-                    </div>
-                  </div>
-                )}
 
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                   <button
@@ -391,86 +334,143 @@ export default function App() {
           </section>
         )}
 
-        {/* ── Step: Results Screen ── */}
+        {/* ── Step: Results Screen (Ranked Candidates OR Clarify Variant) ── */}
         {activeInfoView === 'none' && flow.state.step === 'results' && (
           <section className="section-padding">
             <div className="container-narrow">
               <Stepper currentStep="results" />
 
-              <div style={{ marginBottom: '24px' }}>
-                <div className="hero-eyebrow" style={{ marginBottom: '8px' }}>Step 3 · Authority Results</div>
-                <h2>
-                  {flow.state.analysis?.candidates?.length === 0
-                    ? 'No Confident Match Found'
-                    : `Matching Public Authorit${flow.state.analysis?.candidates?.length === 1 ? 'y' : 'ies'}`}
-                </h2>
-                <p>
-                  {flow.state.analysis?.candidates?.length > 0
-                    ? 'Select an authority to inspect why it matches and view official filing routes.'
-                    : 'We could not confidently find a verified authority in our current dataset for this specific query.'}
-                </p>
-              </div>
-
-              {/* Concurrent List Alert */}
-              {flow.state.analysis?.concurrent_conflict && (
-                <div className="alert-banner concurrent">
-                  <span className="alert-icon">⚖</span>
-                  <div>
-                    <strong style={{ display: 'block', marginBottom: '4px', fontSize: '0.95rem' }}>
-                      Constitutional Concurrent List Subject
-                    </strong>
-                    <p style={{ fontSize: '0.9rem', margin: 0, color: 'inherit' }}>
-                      {flow.state.analysis.concurrent_explanation}
+              {/* ── Zero Candidates Clarify Variant (UI_PLAN §3.1) ── */}
+              {(!flow.state.analysis?.candidates || flow.state.analysis.candidates.length === 0) ? (
+                <div className="clarify-card">
+                  <div className="stack-md">
+                    <div className="hero-eyebrow" style={{ marginBottom: '6px' }}>Clarify Topic</div>
+                    <h2>We Couldn't Confidently Match an Authority</h2>
+                    <p>
+                      We couldn't confidently match that to an authority in our current dataset. Select your topic below or add your city/state to find the right department.
                     </p>
                   </div>
-                </div>
-              )}
 
-              {/* Candidate Cards */}
-              {flow.state.analysis?.candidates?.length > 0 ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  {flow.state.analysis.candidates.map((c: any, idx: number) => (
-                    <AuthorityCard
-                      key={c.authority_id || idx}
-                      candidate={c}
-                      index={idx}
-                      onSelect={flow.selectCandidate}
-                      onConfirmDirect={(cand) => {
-                        flow.selectCandidate(cand, idx).then(() => flow.confirmAuthority(cand.authority_id));
-                      }}
-                    />
-                  ))}
+                  {/* Summary of what was parsed so far */}
+                  <div className="summary-table stack-md">
+                    <div className="summary-row">
+                      <span className="summary-key">Your Query</span>
+                      <span className="summary-val" style={{ fontStyle: 'italic' }}>"{flow.state.raw_text}"</span>
+                    </div>
+                    <div className="summary-row">
+                      <span className="summary-key">Topic</span>
+                      <span className="summary-val">Not identified yet</span>
+                    </div>
+                    <div className="summary-row">
+                      <span className="summary-key">Location</span>
+                      <span className="summary-val">{flow.state.location_text || 'Not specified'}</span>
+                    </div>
+                  </div>
+
+                  {/* Quick Domain Pick Buttons */}
+                  <div className="stack-md">
+                    <p className="field-label">Select the topic of your request:</p>
+                    <div className="clarify-chips-grid">
+                      {QUICK_DOMAINS.map(d => (
+                        <button
+                          key={d.id}
+                          className="clarify-chip-btn"
+                          onClick={() => handleClarifyDomain(d.id)}
+                        >
+                          {d.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Inline Location Refinement */}
+                  <div className="stack-lg">
+                    <label htmlFor="clarify-location-input" className="field-label">Add your City or State:</label>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      <input
+                        id="clarify-location-input"
+                        type="text"
+                        className="location-input-field"
+                        placeholder="e.g. Pune, Maharashtra"
+                        value={locationText}
+                        onChange={(e) => setLocationText(e.target.value)}
+                        style={{ minWidth: '220px' }}
+                      />
+                      <button
+                        className="btn btn-primary btn-sm"
+                        onClick={() => flow.submitQuery(queryText, locationText)}
+                      >
+                        Retry Search →
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <button className="btn btn-ghost btn-sm" onClick={() => flow.goBack('search')}>
+                      ← Edit original query
+                    </button>
+                  </div>
                 </div>
               ) : (
-                <div className="card" style={{ textAlign: 'center', padding: '48px 24px' }}>
-                  <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>🔍</div>
-                  <h3>We couldn't confidently identify the authority</h3>
-                  <p style={{ maxWidth: '480px', margin: '8px auto 24px' }}>
-                    Rather than guessing and sending you to the wrong portal, our system admits when it doesn't know. Try adding your city/state or mentioning the specific service.
-                  </p>
-                  <button className="btn btn-primary" onClick={() => flow.goBack('search')}>
-                    ← Try Another Query
-                  </button>
-                </div>
-              )}
+                /* ── Standard Ranked Results Screen ── */
+                <>
+                  <div className="stack-md">
+                    <div className="hero-eyebrow" style={{ marginBottom: '6px' }}>Step 3 · Authority Results</div>
+                    <h2>
+                      {flow.state.analysis.candidates.length === 1
+                        ? '1 Matching Public Authority'
+                        : `${flow.state.analysis.candidates.length} Matching Public Authorities`}
+                    </h2>
+                    <p>Select an authority to inspect why it matches and view official filing instructions.</p>
+                  </div>
 
-              <div style={{ marginTop: '24px' }}>
-                <button className="btn btn-ghost btn-sm" onClick={() => flow.goBack('search')}>
-                  ← Start a new search
-                </button>
-              </div>
+                  {/* Concurrent List Alert (Shortened copy per UI_PLAN §4.4) */}
+                  {flow.state.analysis?.concurrent_conflict && (
+                    <div className="alert-banner concurrent">
+                      <span className="alert-icon">⚖</span>
+                      <div>
+                        <strong>Shared between Central & State Governments:</strong>
+                        <p style={{ margin: 0, fontSize: '0.88rem', color: 'inherit' }}>
+                          Both Central and State authorities hold relevant records for this subject. The Central authority handles national policies; the State authority handles local administration.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Candidate Cards */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {flow.state.analysis.candidates.map((c: any, idx: number) => (
+                      <AuthorityCard
+                        key={c.authority_id || idx}
+                        candidate={c}
+                        index={idx}
+                        onSelect={flow.selectCandidate}
+                        onConfirmDirect={(cand) => {
+                          flow.selectCandidate(cand, idx).then(() => flow.confirmAuthority(cand.authority_id));
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  <div style={{ marginTop: '24px' }}>
+                    <button className="btn btn-ghost btn-sm" onClick={() => flow.goBack('search')}>
+                      ← Start a new search
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </section>
         )}
 
-        {/* ── Step: Why This Authority ── */}
+        {/* ── Step: Why This Authority (Reasoning & Grounding) ── */}
         {activeInfoView === 'none' && flow.state.step === 'why' && flow.state.selectedCandidate && (
           <section className="section-padding">
             <div className="container-narrow">
               <Stepper currentStep="why" />
 
-              <div style={{ marginBottom: '24px' }}>
-                <div className="hero-eyebrow" style={{ marginBottom: '8px' }}>Step 4 · Grounded Reasoning</div>
+              <div className="stack-md">
+                <div className="hero-eyebrow" style={{ marginBottom: '6px' }}>Step 4 · Reasoning</div>
                 <h2>Why This Authority?</h2>
                 <p>Review the legal grounding and jurisdiction scope before confirming your selection.</p>
               </div>
@@ -486,7 +486,7 @@ export default function App() {
                   />
                 </div>
 
-                <h3 style={{ fontSize: '1.4rem', marginBottom: '4px' }}>
+                <h3 style={{ fontSize: '1.35rem', marginBottom: '4px' }}>
                   {flow.state.selectedCandidate.name}
                 </h3>
                 {flow.state.selectedCandidate.short_name && (
@@ -501,7 +501,7 @@ export default function App() {
                   </div>
                   <div className="why-body">
                     {flow.state.explanation || (
-                      `${flow.state.selectedCandidate.name} is the verified public authority responsible for this domain under applicable municipal/state/central laws.`
+                      `${flow.state.selectedCandidate.name} is the verified public authority responsible for this domain under applicable municipal, state, or central laws.`
                     )}
                   </div>
 
@@ -519,12 +519,12 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Section 6(3) Context Alert */}
+                {/* Section 6(3) Context Note (Clean single line per UI_PLAN §4.5) */}
                 {flow.state.selectedCandidate.government_level !== 'CENTRAL' && (
-                  <div className="alert-banner info" style={{ marginTop: '16px' }}>
+                  <div className="alert-banner info" style={{ marginTop: '16px', marginBottom: 0 }}>
                     <span className="alert-icon">💡</span>
-                    <div style={{ fontSize: '0.88rem' }}>
-                      <strong>Why filing directly matters:</strong> The RTI Act's Section 6(3) transfer mechanism is not reliably guaranteed between Central and State authorities due to administrative circulars. Filing directly to this portal ensures your application is processed immediately.
+                    <div style={{ fontSize: '0.86rem' }}>
+                      <strong>Why filing directly matters:</strong> Government rules treat cross-jurisdiction transfers between Central and State as discretionary. Filing directly here ensures immediate processing without risk of return.
                     </div>
                   </div>
                 )}
@@ -550,7 +550,7 @@ export default function App() {
           </section>
         )}
 
-        {/* ── Step: Filing Route Guide ── */}
+        {/* ── Step: Filing Route Guide (Clean Payoff per UI_PLAN §4.7) ── */}
         {activeInfoView === 'none' && flow.state.step === 'filing' && flow.state.selectedCandidate && (
           <FilingRouteView
             candidate={flow.state.selectedCandidate}
@@ -569,7 +569,7 @@ export default function App() {
   );
 }
 
-// ── Filing Route View Sub-component ───────────────────────────
+// ── Filing Route View Sub-component (Clean Payoff per UI_PLAN §4.7) ──
 function FilingRouteView({
   candidate,
   queryId,
@@ -666,15 +666,18 @@ function FilingRouteView({
           </div>
         </div>
 
-        {/* Disclaimer Banner */}
-        <div className="alert-banner info" style={{ marginTop: '24px' }}>
-          <span className="alert-icon">⚠</span>
-          <div style={{ fontSize: '0.88rem' }}>
-            <strong>Legal Disclaimer:</strong> Details were verified from official gazettes & portal directories on {candidate.last_verified_date}. Always double-check current fees on the official government website prior to payment.
-          </div>
+        {/* Single Merged Callout Box per UI_PLAN §4.7 */}
+        <div className="callout-box">
+          <h4>
+            <span>ℹ</span> Before You File
+          </h4>
+          <ul>
+            <li>Details were verified from official gazettes & portal directories on {candidate.last_verified_date}. Always double-check current fees on the official government website prior to payment.</li>
+            <li>Government rules treat cross-jurisdiction transfers between Central and State as discretionary. Filing directly on the portal listed above ensures timely processing.</li>
+          </ul>
         </div>
 
-        {/* Feedback Card */}
+        {/* Feedback Card (Visual separation per UI_PLAN §4.7) */}
         <div className="card" style={{ marginTop: '24px', padding: '20px' }}>
           <h4 style={{ fontSize: '0.95rem', marginBottom: '8px' }}>Did this guide help you?</h4>
           {feedbackSent ? (
