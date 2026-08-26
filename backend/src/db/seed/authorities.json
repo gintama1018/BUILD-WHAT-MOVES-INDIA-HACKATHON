@@ -1,0 +1,243 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "snapshot_date": "2026-08-26",
+    "description": "Phase -1 verified seed data. All authority records manually sourced from primary government portals. Retrieved 2026-08-26.",
+    "evidence_discipline": "CONFIRMED = official source; EVIDENCE-BACKED = named expert/NGO; see PLAN.txt Section 2"
+  },
+  "states": [
+    { "id": "MH", "name": "Maharashtra", "is_ut": 0, "code": "MH" },
+    { "id": "NATIONAL", "name": "National (All India)", "is_ut": 0, "code": "IN" }
+  ],
+  "rti_portals": [
+    {
+      "id": "portal_mh",
+      "name": "Maharashtra RTI Online Portal",
+      "url": "https://rtionline.maharashtra.gov.in",
+      "government_level": "STATE",
+      "state_id": "MH",
+      "fee_amount": 10,
+      "fee_currency": "INR",
+      "accepts_online": 1,
+      "fee_source": "Maharashtra Right to Information Rules, 2026 (July 7, 2026 notification, File No. GAD-12020/4/2025-GAD(DESK-6)) — CONFIRMED OFFICIAL",
+      "fee_retrieved": "2026-08-26"
+    },
+    {
+      "id": "portal_central",
+      "name": "Central Government RTI Online Portal",
+      "url": "https://rtionline.gov.in",
+      "government_level": "CENTRAL",
+      "state_id": null,
+      "fee_amount": 10,
+      "fee_currency": "INR",
+      "accepts_online": 1,
+      "fee_source": "RTI Act Rules 2012 + rtionline.gov.in — CONFIRMED OFFICIAL",
+      "fee_retrieved": "2026-08-26"
+    }
+  ],
+  "subject_domains": [
+    { "id": "roads",       "label": "Roads & municipal infrastructure" },
+    { "id": "water",       "label": "Water supply & sanitation" },
+    { "id": "property",    "label": "Property tax & building permissions" },
+    { "id": "electricity", "label": "Electricity supply & billing" },
+    { "id": "passport",    "label": "Passport, visa & consular services" },
+    { "id": "education",   "label": "Schools, colleges & education schemes" },
+    { "id": "police",      "label": "Police, law enforcement & public order" },
+    { "id": "pension",     "label": "Pension & retirement benefits" },
+    { "id": "municipal",   "label": "Municipal corporation services" },
+    { "id": "health",      "label": "Public health & hospitals" }
+  ],
+  "geographic_areas": [
+    { "id": "geo_national", "type": "NATIONAL", "name": "National (All India)", "state_id": null, "parent_id": null },
+    { "id": "geo_mh",       "type": "STATE",    "name": "Maharashtra",          "state_id": "MH",       "parent_id": "geo_national" },
+    { "id": "geo_pune",     "type": "CITY",     "name": "Pune",                 "state_id": "MH",       "parent_id": "geo_mh" },
+    { "id": "geo_mumbai",   "type": "CITY",     "name": "Mumbai",               "state_id": "MH",       "parent_id": "geo_mh" }
+  ],
+  "source_documents": [
+    {
+      "id": "src_mh_portal",
+      "title": "Maharashtra RTI Online Portal — homepage warning text",
+      "url": "https://rtionline.maharashtra.gov.in",
+      "retrieved_date": "2026-08-26",
+      "publisher_type": "OFFICIAL",
+      "confidence_tier": "HIGH"
+    },
+    {
+      "id": "src_mh_rules_2026",
+      "title": "Maharashtra Right to Information Rules, 2026 (July 7, 2026 notification — File No. GAD-12020/4/2025-GAD(DESK-6))",
+      "url": "https://rtionline.maharashtra.gov.in/webroot/GR/RTI_Rules_2026_NEW.pdf",
+      "retrieved_date": "2026-08-26",
+      "publisher_type": "OFFICIAL",
+      "confidence_tier": "HIGH"
+    },
+    {
+      "id": "src_pmc",
+      "title": "Pune Municipal Corporation — official website",
+      "url": "https://www.pmc.gov.in",
+      "retrieved_date": "2026-08-26",
+      "publisher_type": "OFFICIAL",
+      "confidence_tier": "HIGH"
+    },
+    {
+      "id": "src_msedcl",
+      "title": "Maharashtra State Electricity Distribution Co. Ltd. (MSEDCL/Mahavitaran) — official website RTI section",
+      "url": "https://www.mahadiscom.in",
+      "retrieved_date": "2026-08-26",
+      "publisher_type": "OFFICIAL",
+      "confidence_tier": "HIGH"
+    },
+    {
+      "id": "src_central_portal",
+      "title": "Central Government RTI Online Portal — rtionline.gov.in",
+      "url": "https://rtionline.gov.in",
+      "retrieved_date": "2026-08-26",
+      "publisher_type": "OFFICIAL",
+      "confidence_tier": "HIGH"
+    },
+    {
+      "id": "src_constitution_concurrent",
+      "title": "Constitution of India — Seventh Schedule, Concurrent List, Entry 25 (Education)",
+      "url": "https://legislative.gov.in/constitution-of-india",
+      "retrieved_date": "2026-08-26",
+      "publisher_type": "OFFICIAL",
+      "confidence_tier": "HIGH"
+    },
+    {
+      "id": "src_constitution_state_police",
+      "title": "Constitution of India — Seventh Schedule, State List, Entry 2 (Police) + Entry 5 (Local Government)",
+      "url": "https://legislative.gov.in/constitution-of-india",
+      "retrieved_date": "2026-08-26",
+      "publisher_type": "OFFICIAL",
+      "confidence_tier": "HIGH"
+    },
+    {
+      "id": "src_doppw",
+      "title": "Department of Pension & Pensioners' Welfare — pensionersportal.gov.in",
+      "url": "https://pensionersportal.gov.in",
+      "retrieved_date": "2026-08-26",
+      "publisher_type": "OFFICIAL",
+      "confidence_tier": "HIGH"
+    }
+  ],
+  "public_authorities": [
+    {
+      "id": "auth_pmc",
+      "name": "Pune Municipal Corporation",
+      "short_name": "PMC",
+      "government_level": "LOCAL",
+      "state_id": "MH",
+      "rti_portal_id": "portal_mh",
+      "filing_method": "BOTH",
+      "source_document_id": "src_pmc",
+      "last_verified_date": "2026-08-26",
+      "is_concurrent_list": 0,
+      "pio_designation": "Public Information Officer, Pune Municipal Corporation",
+      "pio_contact_note": "Named PIO not sourced (PMC RTI page JS-rendered — store designation level per §12 data model). Phone: 1800-1030-222. Address: Near Mangala Theatre, Shivajinagar, Pune-411005.",
+      "notes": "Municipal corporation constituted under Maharashtra Municipal Corporations Act. Subject: municipal services in City of Pune. CLEAN SINGLE-JURISDICTION — primary demo topic 1. Confidence: HIGH for government_level and jurisdiction; MEDIUM for named PIO (not sourced).",
+      "subject_domain_ids": ["roads", "water", "property", "municipal", "health"],
+      "geographic_area_ids": ["geo_pune"]
+    },
+    {
+      "id": "auth_msedcl",
+      "name": "Maharashtra State Electricity Distribution Company Ltd.",
+      "short_name": "MSEDCL / Mahavitaran",
+      "government_level": "STATE",
+      "state_id": "MH",
+      "rti_portal_id": "portal_mh",
+      "filing_method": "BOTH",
+      "source_document_id": "src_msedcl",
+      "last_verified_date": "2026-08-26",
+      "is_concurrent_list": 0,
+      "pio_designation": "Public Information Officer, MSEDCL [Zone Office]",
+      "pio_contact_note": "PIOs designated at Head Office and zone/circle level. List available at mahadiscom.in under RTI section. File to the PIO of the zone handling your area.",
+      "notes": "Wholly Maharashtra-Government-owned PSU. Subject: electricity distribution, billing, connections for Maharashtra (excluding Mumbai city area). CLEAN SINGLE-JURISDICTION — primary demo topic 2. Confidence: HIGH.",
+      "subject_domain_ids": ["electricity"],
+      "geographic_area_ids": ["geo_mh"]
+    },
+    {
+      "id": "auth_mea_passport",
+      "name": "Ministry of External Affairs — Regional Passport Office",
+      "short_name": "MEA / RPO",
+      "government_level": "CENTRAL",
+      "state_id": null,
+      "rti_portal_id": "portal_central",
+      "filing_method": "BOTH",
+      "source_document_id": "src_central_portal",
+      "last_verified_date": "2026-08-26",
+      "is_concurrent_list": 0,
+      "pio_designation": "Public Information Officer, Regional Passport Office [City]",
+      "pio_contact_note": "File RTI at rtionline.gov.in — select Ministry of External Affairs. For offline: to PIO at the concerned Regional Passport Office.",
+      "notes": "Passports are a Union List subject (Schedule VII, List I). MEA is a Central Government ministry. File on the CENTRAL portal (rtionline.gov.in), NOT on any state portal. CLEAN SINGLE-JURISDICTION CENTRAL — primary demo topic 3. Confidence: HIGH.",
+      "subject_domain_ids": ["passport"],
+      "geographic_area_ids": ["geo_national"]
+    },
+    {
+      "id": "auth_moe_central",
+      "name": "Ministry of Education (Government of India)",
+      "short_name": "MoE",
+      "government_level": "CENTRAL",
+      "state_id": null,
+      "rti_portal_id": "portal_central",
+      "filing_method": "BOTH",
+      "source_document_id": "src_constitution_concurrent",
+      "last_verified_date": "2026-08-26",
+      "is_concurrent_list": 1,
+      "pio_designation": "Public Information Officer, Ministry of Education",
+      "pio_contact_note": "File at rtionline.gov.in — select Ministry of Education. For centrally-sponsored schemes (PM POSHAN, Samagra Shiksha, etc.) and UGC/NCERT matters.",
+      "notes": "Education is Concurrent List Entry 25 (Seventh Schedule). Central MoE handles national policy, centrally-sponsored schemes, UGC, NCERT. CONCURRENT LIST — used as the honesty beat in the demo (topic 4). Show ALONGSIDE the State Education Dept entry, never as a sole answer.",
+      "subject_domain_ids": ["education"],
+      "geographic_area_ids": ["geo_national"]
+    },
+    {
+      "id": "auth_mh_education",
+      "name": "School Education and Sports Department, Government of Maharashtra",
+      "short_name": "MH School Education Dept",
+      "government_level": "STATE",
+      "state_id": "MH",
+      "rti_portal_id": "portal_mh",
+      "filing_method": "BOTH",
+      "source_document_id": "src_constitution_concurrent",
+      "last_verified_date": "2026-08-26",
+      "is_concurrent_list": 1,
+      "pio_designation": "Public Information Officer, School Education and Sports Department, Maharashtra",
+      "pio_contact_note": "File at rtionline.maharashtra.gov.in — select School Education and Sports Department. For state-administered school matters.",
+      "notes": "Education is Concurrent List Entry 25. State Education Dept handles day-to-day school administration, state board, state-level schemes. CONCURRENT LIST — shown ALONGSIDE Central MoE for general education queries. Confidence: HIGH for government_level; shown only in 'it depends' dual result.",
+      "subject_domain_ids": ["education"],
+      "geographic_area_ids": ["geo_mh"]
+    },
+    {
+      "id": "auth_mh_police",
+      "name": "Maharashtra Police (Commissioner of Police / Superintendent of Police)",
+      "short_name": "Maharashtra Police",
+      "government_level": "STATE",
+      "state_id": "MH",
+      "rti_portal_id": "portal_mh",
+      "filing_method": "BOTH",
+      "source_document_id": "src_constitution_state_police",
+      "last_verified_date": "2026-08-26",
+      "is_concurrent_list": 0,
+      "pio_designation": "Public Information Officer, Commissioner of Police [City] / Superintendent of Police [District]",
+      "pio_contact_note": "File at rtionline.maharashtra.gov.in — search for the relevant police commissionerate or superintendence. For district areas: Superintendent of Police [District name].",
+      "notes": "Police is a State List subject (Schedule VII, List II, Entry 2). Maharashtra Police is a STATE authority. CLEAN SINGLE-JURISDICTION — backup topic B1. Avoid Delhi queries in demo (Delhi police is CENTRAL/UT). Confidence: HIGH.",
+      "subject_domain_ids": ["police"],
+      "geographic_area_ids": ["geo_mh"]
+    },
+    {
+      "id": "auth_doppw",
+      "name": "Department of Pension & Pensioners' Welfare, Ministry of Personnel, Public Grievances and Pensions",
+      "short_name": "DoPPW",
+      "government_level": "CENTRAL",
+      "state_id": null,
+      "rti_portal_id": "portal_central",
+      "filing_method": "BOTH",
+      "source_document_id": "src_doppw",
+      "last_verified_date": "2026-08-26",
+      "is_concurrent_list": 0,
+      "pio_designation": "Public Information Officer, Department of Pension & Pensioners' Welfare",
+      "pio_contact_note": "File at rtionline.gov.in — select Ministry of Personnel, Public Grievances and Pensions / Department of Pension & Pensioners' Welfare. For Central Government employee pension matters.",
+      "notes": "Central Government employee pensions are administered by DoPPW, a Central Government department. CLEAN SINGLE-JURISDICTION CENTRAL — backup topic B2. Note: State government employee pensions are a STATE subject; this authority is specifically for Central Govt employees. Confidence: HIGH.",
+      "subject_domain_ids": ["pension"],
+      "geographic_area_ids": ["geo_national"]
+    }
+  ]
+}
