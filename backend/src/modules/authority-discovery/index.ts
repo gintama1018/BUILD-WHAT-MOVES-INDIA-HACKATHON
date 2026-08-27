@@ -34,6 +34,9 @@ export interface ValidatedCandidate {
   last_verified_date: string;
   source_document_title: string;
   source_document_url: string;
+  bpl_exemption_note: string | null;
+  bpl_exemption_source_title: string | null;
+  bpl_exemption_source_url: string | null;
   pio_designation: string | null;
   pio_contact_note: string | null;
   subject_domain_ids: string[];
@@ -135,7 +138,13 @@ export async function discoverAuthorities(query: CitizenQuery): Promise<Discover
 
     // Get source doc info
     const src = db.prepare(`SELECT title, url FROM source_documents WHERE id = ?`).get(row.source_document_id) as any;
-    const portal = db.prepare(`SELECT url, fee_amount FROM rti_portals WHERE id = ?`).get(row.rti_portal_id) as any;
+    const portal = db.prepare(`
+      SELECT p.url, p.fee_amount, p.bpl_exemption_note,
+             bsrc.title as bpl_source_title, bsrc.url as bpl_source_url
+      FROM rti_portals p
+      LEFT JOIN source_documents bsrc ON bsrc.id = p.bpl_exemption_source_id
+      WHERE p.id = ?
+    `).get(row.rti_portal_id) as any;
 
     validated.push({
       authority_id: row.id,
@@ -151,6 +160,9 @@ export async function discoverAuthorities(query: CitizenQuery): Promise<Discover
       last_verified_date: row.last_verified_date,
       source_document_title: src?.title ?? '',
       source_document_url: src?.url ?? '',
+      bpl_exemption_note: portal?.bpl_exemption_note ?? null,
+      bpl_exemption_source_title: portal?.bpl_source_title ?? null,
+      bpl_exemption_source_url: portal?.bpl_source_url ?? null,
       pio_designation: row.pio_designation ?? null,
       pio_contact_note: row.pio_contact_note ?? null,
       subject_domain_ids: authorityCandidate.subject_domain_ids,

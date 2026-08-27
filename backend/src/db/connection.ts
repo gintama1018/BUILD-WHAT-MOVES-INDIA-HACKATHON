@@ -20,6 +20,10 @@ export function getDb(): Database.Database {
   const schema = fs.readFileSync(schemaPath, 'utf-8');
   db.exec(schema);
 
+  // Column migrations for existing databases
+  try { db.exec(`ALTER TABLE rti_portals ADD COLUMN bpl_exemption_note TEXT;`); } catch {}
+  try { db.exec(`ALTER TABLE rti_portals ADD COLUMN bpl_exemption_source_id TEXT;`); } catch {}
+
   return db;
 }
 

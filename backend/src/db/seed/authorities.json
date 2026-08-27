@@ -1,6 +1,6 @@
 {
   "meta": {
-    "version": "1.1.0",
+    "version": "1.2.0",
     "snapshot_date": "2026-08-26",
     "description": "Phase -1 verified seed data. All authority records manually sourced from primary government portals. Retrieved 2026-08-26.",
     "evidence_discipline": "CONFIRMED = official source; EVIDENCE-BACKED = named expert/NGO; see PLAN.txt Section 2"
@@ -21,7 +21,9 @@
       "fee_currency": "INR",
       "accepts_online": 1,
       "fee_source": "Maharashtra Right to Information Rules, 2026 (July 7, 2026 notification, File No. GAD-12020/4/2025-GAD(DESK-6)) — CONFIRMED OFFICIAL",
-      "fee_retrieved": "2026-08-26"
+      "fee_retrieved": "2026-08-26",
+      "bpl_exemption_note": "Below Poverty Line (BPL) cardholders are exempt from all application and document copying fees under Section 7(5) proviso of the RTI Act, 2005 (proof of BPL status required with application).",
+      "bpl_exemption_source_id": "src_rti_act_sec7"
     },
     {
       "id": "portal_delhi",
@@ -33,7 +35,9 @@
       "fee_currency": "INR",
       "accepts_online": 1,
       "fee_source": "Delhi RTI Rules 2001 & GNCTD Portal — CONFIRMED OFFICIAL",
-      "fee_retrieved": "2026-08-26"
+      "fee_retrieved": "2026-08-26",
+      "bpl_exemption_note": "Below Poverty Line (BPL) cardholders are exempt from all application and document copying fees under Section 7(5) proviso of the RTI Act, 2005 (proof of BPL status required with application).",
+      "bpl_exemption_source_id": "src_rti_act_sec7"
     },
     {
       "id": "portal_central",
@@ -45,7 +49,9 @@
       "fee_currency": "INR",
       "accepts_online": 1,
       "fee_source": "RTI Act Rules 2012 + rtionline.gov.in — CONFIRMED OFFICIAL",
-      "fee_retrieved": "2026-08-26"
+      "fee_retrieved": "2026-08-26",
+      "bpl_exemption_note": "Below Poverty Line (BPL) cardholders are exempt from all application and document copying fees under Section 7(5) proviso of the RTI Act, 2005 (proof of BPL status required with application).",
+      "bpl_exemption_source_id": "src_rti_act_sec7"
     }
   ],
   "subject_domains": [
@@ -69,6 +75,14 @@
     { "id": "geo_new_delhi", "type": "CITY",     "name": "New Delhi",            "state_id": "DL",       "parent_id": "geo_delhi" }
   ],
   "source_documents": [
+    {
+      "id": "src_rti_act_sec7",
+      "title": "Right to Information Act, 2005 — Section 7(5) Proviso (Statutory Fee Exemption for Below Poverty Line Citizens)",
+      "url": "https://www.indiacode.nic.in/handle/123456789/2065",
+      "retrieved_date": "2026-08-26",
+      "publisher_type": "OFFICIAL",
+      "confidence_tier": "HIGH"
+    },
     {
       "id": "src_mh_portal",
       "title": "Maharashtra RTI Online Portal — homepage warning text",

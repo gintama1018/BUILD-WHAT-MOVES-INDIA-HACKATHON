@@ -16,7 +16,7 @@ const FAQ_DATA: FAQItem[] = [
   },
   {
     question: 'How much is the RTI application fee in India?',
-    answer: 'For the Central Government (rtionline.gov.in), the standard fee is ₹10. In Maharashtra, the fee is ₹10 (confirmed under the Maharashtra RTI Rules, 2026 notification). Applicants living Below the Poverty Line (BPL) are exempt from fees upon uploading proof.'
+    answer: 'For Central Government authorities (rtionline.gov.in) and state portals like Maharashtra (rtionline.maharashtra.gov.in) and Delhi (rtionline.delhi.gov.in), the standard fee is ₹10. Under the Section 7(5) proviso of the Right to Information Act, 2005, citizens living Below the Poverty Line (BPL) are completely exempt from all application and document copying fees upon providing proof of BPL status (e.g. BPL ration card or certificate).'
   },
   {
     question: 'What happens if a subject is on the Concurrent List (like Education)?',

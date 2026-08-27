@@ -126,12 +126,14 @@ router.get('/:id/explain', async (req: Request, res: Response) => {
   const candidate = db.prepare(`
     SELECT ac.*, pa.name, pa.government_level, pa.notes, pa.pio_designation, pa.pio_contact_note,
            pa.last_verified_date, pa.filing_method, pa.is_concurrent_list,
-           p.url as portal_url, p.fee_amount,
-           src.title as source_title, src.url as source_url
+           p.url as portal_url, p.fee_amount, p.bpl_exemption_note,
+           src.title as source_title, src.url as source_url,
+           bsrc.title as bpl_source_title, bsrc.url as bpl_source_url
     FROM authority_candidates ac
     JOIN public_authorities pa ON pa.id = ac.public_authority_id
     JOIN rti_portals p ON p.id = pa.rti_portal_id
     JOIN source_documents src ON src.id = pa.source_document_id
+    LEFT JOIN source_documents bsrc ON bsrc.id = p.bpl_exemption_source_id
     WHERE ac.query_id = ?
     ORDER BY ac.rank
     LIMIT 1 OFFSET ?

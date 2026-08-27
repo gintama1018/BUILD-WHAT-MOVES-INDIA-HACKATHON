@@ -18,36 +18,41 @@ export function runSeed(): void {
       stateStmt.run(s.id, s.name, s.is_ut, s.code);
     }
 
+    // Source Documents (inserted first for foreign keys)
+    const srcStmt = db.prepare(
+      `INSERT OR REPLACE INTO source_documents (id, title, url, retrieved_date, publisher_type, confidence_tier)
+       VALUES (?, ?, ?, ?, ?, ?)`
+    );
+    for (const s of seedData.source_documents) {
+      srcStmt.run(s.id, s.title, s.url, s.retrieved_date, s.publisher_type, s.confidence_tier);
+    }
+
     // RTI Portals
     const portalStmt = db.prepare(
-      `INSERT OR IGNORE INTO rti_portals (id, name, url, government_level, state_id, fee_amount, fee_currency, accepts_online)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      `INSERT OR REPLACE INTO rti_portals (id, name, url, government_level, state_id, fee_amount, fee_currency, accepts_online, bpl_exemption_note, bpl_exemption_source_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     );
     for (const p of seedData.rti_portals) {
-      portalStmt.run(p.id, p.name, p.url, p.government_level, p.state_id ?? null, p.fee_amount, p.fee_currency, p.accepts_online);
+      portalStmt.run(
+        p.id, p.name, p.url, p.government_level, p.state_id ?? null,
+        p.fee_amount, p.fee_currency, p.accepts_online,
+        (p as any).bpl_exemption_note ?? null,
+        (p as any).bpl_exemption_source_id ?? null
+      );
     }
 
     // Subject Domains
-    const domainStmt = db.prepare(`INSERT OR IGNORE INTO subject_domains (id, label) VALUES (?, ?)`);
+    const domainStmt = db.prepare(`INSERT OR REPLACE INTO subject_domains (id, label) VALUES (?, ?)`);
     for (const d of seedData.subject_domains) {
       domainStmt.run(d.id, d.label);
     }
 
     // Geographic Areas
     const geoStmt = db.prepare(
-      `INSERT OR IGNORE INTO geographic_areas (id, type, name, state_id, parent_id) VALUES (?, ?, ?, ?, ?)`
+      `INSERT OR REPLACE INTO geographic_areas (id, type, name, state_id, parent_id) VALUES (?, ?, ?, ?, ?)`
     );
     for (const g of seedData.geographic_areas) {
       geoStmt.run(g.id, g.type, g.name, g.state_id ?? null, g.parent_id ?? null);
-    }
-
-    // Source Documents
-    const srcStmt = db.prepare(
-      `INSERT OR IGNORE INTO source_documents (id, title, url, retrieved_date, publisher_type, confidence_tier)
-       VALUES (?, ?, ?, ?, ?, ?)`
-    );
-    for (const s of seedData.source_documents) {
-      srcStmt.run(s.id, s.title, s.url, s.retrieved_date, s.publisher_type, s.confidence_tier);
     }
 
     // Public Authorities + junction tables

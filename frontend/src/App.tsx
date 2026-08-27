@@ -633,8 +633,23 @@ function FilingRouteView({
             <div className="step-content">
               <h4>Pay the Application Fee</h4>
               <p>
-                Standard Fee: <span className="fee-tag">₹{candidate.fee_amount}</span>. Payable online via Net Banking, UPI, or Credit/Debit Card on the portal. BPL cardholders are exempt.
+                Standard Fee: <span className="fee-tag">₹{candidate.fee_amount}</span>. Payable online via Net Banking, UPI, or Credit/Debit Card on the portal.
               </p>
+              {candidate.bpl_exemption_note && (
+                <div style={{ marginTop: '6px', fontSize: '0.86rem', color: 'var(--md-sys-color-on-surface-variant)' }}>
+                  <span>🏷 <strong>Fee Exemption:</strong> {candidate.bpl_exemption_note}</span>{' '}
+                  {candidate.bpl_exemption_source_url && (
+                    <a
+                      href={candidate.bpl_exemption_source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: 'var(--md-sys-color-primary)', fontWeight: 600 }}
+                    >
+                      ({candidate.bpl_exemption_source_title || 'RTI Act 2005, §7(5) Proviso'} ↗)
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

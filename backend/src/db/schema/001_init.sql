@@ -29,7 +29,9 @@ CREATE TABLE IF NOT EXISTS rti_portals (
   state_id        TEXT REFERENCES states(id),
   fee_amount      INTEGER NOT NULL DEFAULT 10,
   fee_currency    TEXT NOT NULL DEFAULT 'INR',
-  accepts_online  INTEGER NOT NULL DEFAULT 1
+  accepts_online  INTEGER NOT NULL DEFAULT 1,
+  bpl_exemption_note TEXT,
+  bpl_exemption_source_id TEXT REFERENCES source_documents(id)
 );
 
 CREATE TABLE IF NOT EXISTS subject_domains (

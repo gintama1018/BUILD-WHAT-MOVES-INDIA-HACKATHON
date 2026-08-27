@@ -117,9 +117,20 @@ export function AboutRtiView({ onBack }: { onBack: () => void }) {
 
           <div className="card">
             <h3>Application Fees & Exemptions</h3>
-            <p style={{ marginTop: '8px' }}>
-              The application fee is ₹10 for Central Government authorities (via rtionline.gov.in) and ₹10 in Maharashtra (under Maharashtra RTI Rules 2026). Citizens below the poverty line (BPL) are completely exempt from application and document copying fees.
+            <p style={{ marginTop: '8px', lineHeight: 1.6 }}>
+              The standard application fee is ₹10 for Central Government authorities (via rtionline.gov.in) and ₹10 for State/UT portals (such as Maharashtra and Delhi).
             </p>
+            <div className="callout-box" style={{ marginTop: '12px' }}>
+              <h4><span>⚖</span> Statutory BPL Exemption</h4>
+              <p style={{ margin: 0, fontSize: '0.88rem' }}>
+                Under the <strong>Section 7(5) proviso of the Right to Information Act, 2005</strong>, citizens living Below the Poverty Line (BPL) are completely exempt from all application and document copying fees upon submitting proof of BPL status (such as a BPL card or certificate).
+              </p>
+              <div style={{ marginTop: '8px', fontSize: '0.82rem' }}>
+                <a href="https://www.indiacode.nic.in/handle/123456789/2065" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--md-sys-color-primary)', fontWeight: 600 }}>
+                  View RTI Act 2005, §7(5) on India Code (Official Portal) ↗
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
