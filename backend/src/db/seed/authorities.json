@@ -1,12 +1,13 @@
 {
   "meta": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "snapshot_date": "2026-08-26",
     "description": "Phase -1 verified seed data. All authority records manually sourced from primary government portals. Retrieved 2026-08-26.",
     "evidence_discipline": "CONFIRMED = official source; EVIDENCE-BACKED = named expert/NGO; see PLAN.txt Section 2"
   },
   "states": [
     { "id": "MH", "name": "Maharashtra", "is_ut": 0, "code": "MH" },
+    { "id": "DL", "name": "Delhi (NCT)", "is_ut": 1, "code": "DL" },
     { "id": "NATIONAL", "name": "National (All India)", "is_ut": 0, "code": "IN" }
   ],
   "rti_portals": [
@@ -20,6 +21,18 @@
       "fee_currency": "INR",
       "accepts_online": 1,
       "fee_source": "Maharashtra Right to Information Rules, 2026 (July 7, 2026 notification, File No. GAD-12020/4/2025-GAD(DESK-6)) — CONFIRMED OFFICIAL",
+      "fee_retrieved": "2026-08-26"
+    },
+    {
+      "id": "portal_delhi",
+      "name": "GNCTD e-RTI Portal (Delhi)",
+      "url": "https://rtionline.delhi.gov.in",
+      "government_level": "UNION_TERRITORY",
+      "state_id": "DL",
+      "fee_amount": 10,
+      "fee_currency": "INR",
+      "accepts_online": 1,
+      "fee_source": "Delhi RTI Rules 2001 & GNCTD Portal — CONFIRMED OFFICIAL",
       "fee_retrieved": "2026-08-26"
     },
     {
@@ -48,10 +61,12 @@
     { "id": "health",      "label": "Public health & hospitals" }
   ],
   "geographic_areas": [
-    { "id": "geo_national", "type": "NATIONAL", "name": "National (All India)", "state_id": null, "parent_id": null },
-    { "id": "geo_mh",       "type": "STATE",    "name": "Maharashtra",          "state_id": "MH",       "parent_id": "geo_national" },
-    { "id": "geo_pune",     "type": "CITY",     "name": "Pune",                 "state_id": "MH",       "parent_id": "geo_mh" },
-    { "id": "geo_mumbai",   "type": "CITY",     "name": "Mumbai",               "state_id": "MH",       "parent_id": "geo_mh" }
+    { "id": "geo_national",  "type": "NATIONAL", "name": "National (All India)", "state_id": null, "parent_id": null },
+    { "id": "geo_mh",        "type": "STATE",    "name": "Maharashtra",          "state_id": "MH",       "parent_id": "geo_national" },
+    { "id": "geo_pune",      "type": "CITY",     "name": "Pune",                 "state_id": "MH",       "parent_id": "geo_mh" },
+    { "id": "geo_mumbai",    "type": "CITY",     "name": "Mumbai",               "state_id": "MH",       "parent_id": "geo_mh" },
+    { "id": "geo_delhi",     "type": "STATE",    "name": "Delhi (NCT)",          "state_id": "DL",       "parent_id": "geo_national" },
+    { "id": "geo_new_delhi", "type": "CITY",     "name": "New Delhi",            "state_id": "DL",       "parent_id": "geo_delhi" }
   ],
   "source_documents": [
     {
@@ -114,6 +129,22 @@
       "id": "src_doppw",
       "title": "Department of Pension & Pensioners' Welfare — pensionersportal.gov.in",
       "url": "https://pensionersportal.gov.in",
+      "retrieved_date": "2026-08-26",
+      "publisher_type": "OFFICIAL",
+      "confidence_tier": "HIGH"
+    },
+    {
+      "id": "src_delhi_portal",
+      "title": "GNCTD e-RTI Portal — rtionline.delhi.gov.in",
+      "url": "https://rtionline.delhi.gov.in",
+      "retrieved_date": "2026-08-26",
+      "publisher_type": "OFFICIAL",
+      "confidence_tier": "HIGH"
+    },
+    {
+      "id": "src_mcd",
+      "title": "Municipal Corporation of Delhi — official portal",
+      "url": "https://mcdonline.nic.in",
       "retrieved_date": "2026-08-26",
       "publisher_type": "OFFICIAL",
       "confidence_tier": "HIGH"
@@ -238,6 +269,23 @@
       "notes": "Central Government employee pensions are administered by DoPPW, a Central Government department. CLEAN SINGLE-JURISDICTION CENTRAL — backup topic B2. Note: State government employee pensions are a STATE subject; this authority is specifically for Central Govt employees. Confidence: HIGH.",
       "subject_domain_ids": ["pension"],
       "geographic_area_ids": ["geo_national"]
+    },
+    {
+      "id": "auth_mcd",
+      "name": "Municipal Corporation of Delhi",
+      "short_name": "MCD",
+      "government_level": "LOCAL",
+      "state_id": "DL",
+      "rti_portal_id": "portal_delhi",
+      "filing_method": "BOTH",
+      "source_document_id": "src_mcd",
+      "last_verified_date": "2026-08-26",
+      "is_concurrent_list": 0,
+      "pio_designation": "Public Information Officer, Municipal Corporation of Delhi [Concerned Zone]",
+      "pio_contact_note": "MCD has 12 administrative zones. File online at rtionline.delhi.gov.in (select Municipal Corporation of Delhi) or submit in person at the concerned Zonal Citizen Service Bureau.",
+      "notes": "Unified municipal corporation for National Capital Territory of Delhi. Handles civic roads, drainage, property tax, and sanitation across Delhi.",
+      "subject_domain_ids": ["roads", "water", "property", "municipal", "health"],
+      "geographic_area_ids": ["geo_delhi", "geo_new_delhi"]
     }
   ]
 }

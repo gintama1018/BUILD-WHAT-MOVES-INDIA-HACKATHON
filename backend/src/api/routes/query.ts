@@ -36,7 +36,7 @@ router.post('/', async (req: Request, res: Response) => {
 
 // POST /api/query/:id/analyze — Run the full pipeline
 router.post('/:id/analyze', async (req: Request, res: Response) => {
-  const { id: queryId } = req.params;
+  const queryId = String(req.params.id);
   const db = getDb();
 
   const query = db.prepare(`SELECT * FROM queries WHERE id = ?`).get(queryId) as any;
@@ -116,7 +116,7 @@ router.post('/:id/analyze', async (req: Request, res: Response) => {
 
 // GET /api/query/:id/explain — Get grounded explanation for top candidate
 router.get('/:id/explain', async (req: Request, res: Response) => {
-  const { id: queryId } = req.params;
+  const queryId = String(req.params.id);
   const candidateIndex = parseInt(req.query.candidate as string || '0');
   const db = getDb();
 
@@ -165,7 +165,7 @@ router.get('/:id/explain', async (req: Request, res: Response) => {
 
 // POST /api/query/:id/confirm — User confirms an authority choice
 router.post('/:id/confirm', async (req: Request, res: Response) => {
-  const { id: queryId } = req.params;
+  const queryId = String(req.params.id);
   const { candidate_id } = req.body;
   const db = getDb();
 
@@ -209,7 +209,7 @@ function keywordFallbackIntent(rawText: string, locationText: string | null): Ci
   };
   const cityKeywords: Record<string, string> = {
     'pune': 'Pune', 'mumbai': 'Mumbai', 'delhi': 'Delhi',
-    'bangalore': 'Bangalore', 'bangalore': 'Bengaluru', 'chennai': 'Chennai',
+    'bangalore': 'Bangalore', 'bengaluru': 'Bengaluru', 'chennai': 'Chennai',
   };
 
   const combinedText = (rawText + ' ' + (locationText || '')).toLowerCase();

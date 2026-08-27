@@ -7,6 +7,7 @@ import { getDb } from '../../db/connection';
 import {
   AuthorityCandidate,
   CitizenQuery,
+  GovernmentLevel,
   validateCandidate,
   detectConcurrentConflict,
   ValidationResult,
@@ -42,14 +43,35 @@ export interface ValidatedCandidate {
   match_reasons: string[];
 }
 
-function buildCandidate(row: any, db: any): AuthorityCandidate {
-  const domains = db.prepare(`SELECT domain_id FROM authority_subject_domains WHERE authority_id = ?`).all(row.id).map((r: any) => r.domain_id);
-  const geoRows = db.prepare(`
+interface RawAuthorityRow {
+  id: string;
+  name: string;
+  short_name: string | null;
+  government_level: GovernmentLevel;
+  state_id: string | null;
+  is_concurrent_list: number;
+  rti_portal_id: string;
+  filing_method: string;
+  last_verified_date: string;
+  source_document_id: string;
+  pio_designation: string | null;
+  pio_contact_note: string | null;
+  notes: string | null;
+  confidence_tier?: string;
+  portal_url?: string;
+  fee_amount?: number;
+  source_title?: string;
+  source_url?: string;
+}
+
+function buildCandidate(row: RawAuthorityRow, db: any): AuthorityCandidate {
+  const domains = (db.prepare(`SELECT domain_id FROM authority_subject_domains WHERE authority_id = ?`).all(row.id) as any[]).map((r: any) => r.domain_id);
+  const geoRows = (db.prepare(`
     SELECT ga.id, ga.type, COALESCE(ga.state_id, '') as state_id
     FROM authority_geographic_areas aga
     JOIN geographic_areas ga ON ga.id = aga.geographic_area_id
     WHERE aga.authority_id = ?
-  `).all(row.id);
+  `).all(row.id) as any[]);
 
   return {
     id: row.id,
@@ -87,7 +109,7 @@ export async function discoverAuthorities(query: CitizenQuery): Promise<Discover
     JOIN source_documents src ON src.id = pa.source_document_id
     LEFT JOIN (SELECT confidence_tier, 'HIGH' as confidence_tier FROM source_documents LIMIT 1) sd ON 1=1
     WHERE asd.domain_id = ?
-  `).all(query.subject_domain || '');
+  `).all(query.subject_domain || '') as RawAuthorityRow[];
 
   // Fallback: keyword search on name if no domain results
   let fallbackUsed = false;
@@ -101,7 +123,7 @@ export async function discoverAuthorities(query: CitizenQuery): Promise<Discover
       JOIN rti_portals p ON p.id = pa.rti_portal_id
       JOIN source_documents src ON src.id = pa.source_document_id
       WHERE LOWER(pa.name) LIKE ? OR LOWER(pa.notes) LIKE ?
-    `).all(`%${query.subject_domain}%`, `%${query.subject_domain}%`);
+    `).all(`%${query.subject_domain}%`, `%${query.subject_domain}%`) as RawAuthorityRow[];
   }
 
   // Build + validate each candidate through the Rule Engine
