@@ -15,9 +15,9 @@ const confLabels: Record<string, { label: string; icon: string; description: str
     description: 'This authority is likely relevant, but another authority may also apply.'
   },
   LOW: {
-    label: 'Needs More Info / Concurrent',
+    label: 'Low Confidence',
     icon: '!',
-    description: 'Multiple jurisdictions may apply or more details are needed.'
+    description: 'Failed jurisdiction rule checks or requires further clarification.'
   },
   NONE: {
     label: 'No Confident Match',

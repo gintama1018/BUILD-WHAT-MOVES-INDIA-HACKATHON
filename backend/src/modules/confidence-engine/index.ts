@@ -48,7 +48,9 @@ export function computeConfidence(
     score += 0.50;
     reasons.push('All jurisdiction rules passed');
   } else {
-    const partialPass = validation.geographic_match || validation.subject_match;
+    // Subject-only match with a geographic hard-fail is NOT a partial pass — it's the
+    // exact wrong-jurisdiction harm this product exists to prevent
+    const partialPass = validation.geographic_match;
     if (partialPass) {
       score += 0.25;
       reasons.push('Partial jurisdiction match');
@@ -79,12 +81,21 @@ export function computeConfidence(
     caveats.push(`Source data is ${Math.round(age)} days old — please verify current details before filing`);
   }
 
-  // Determine level
+  // Determine level — PLAN.txt §20: Rule validation has final say.
   let level: ConfidenceLevel;
-  if (score >= 0.85) level = 'HIGH';
-  else if (score >= 0.55) level = 'MEDIUM';
-  else if (score > 0) level = 'LOW';
-  else level = 'NONE';
+  if (!validation.passed) {
+    // Rule Engine hard-failed this candidate — no combination of good source/freshness
+    // metadata may present it as MEDIUM or HIGH.
+    level = score > 0 ? 'LOW' : 'NONE';
+  } else if (score >= 0.85) {
+    level = 'HIGH';
+  } else if (score >= 0.55) {
+    level = 'MEDIUM';
+  } else if (score > 0) {
+    level = 'LOW';
+  } else {
+    level = 'NONE';
+  }
 
   return { level, score: Math.min(score, 1.0), reasons, caveats };
 }
